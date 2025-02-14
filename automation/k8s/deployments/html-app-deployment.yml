@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${K8S_NAMESPACE}  # Namespace from GitLab CI/CD variable
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}-deployment
+  namespace: ${K8S_NAMESPACE}  # Namespace from GitLab CI/CD variable
+  labels:
+    app: ${APP_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      containers:
+      - name: ${APP_NAME}
+        image: 576245601309.dkr.ecr.us-east-1.amazonaws.com/eks-apps:${CI_PIPELINE_IID} 
+        ports:
+        - containerPort: 8501
+        
